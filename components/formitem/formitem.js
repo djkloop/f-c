@@ -18,7 +18,7 @@ class CreateItem {
   init (vm) {
     console.log(vm)
     this.rules.filter(rule => rule.field !== void 0).forEach(rule => {
-      
+
     })
   }
 

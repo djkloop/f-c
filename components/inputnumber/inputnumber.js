@@ -4,77 +4,38 @@
  * @Author: djkloop
  * @Date: 2018-08-02 11:19:36
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-14 18:45:04
+ * @Last Modified time: 2018-08-15 14:41:13
  */
-// import handlerFactory from '../factory/handler'
-// const renderProps = renderFactory({
-//   parse () {
-//     return this.$cvm.col({ props: this.fields.col }, [this.$cvm.inputNumber(this.inputProps())])
-//   }
-// })
+import handlerFactory from '../../core/handler'
+import renderFactory from '../../core/render'
+import builderFactory from '../../core/builder'
 
-// 1. 关于event 因为每一个组件触发的事件都不一样
-
-class BaseProps {
-
-  constructor (extendProps, ctx) {
-    this.props = this._initData(extendProps, ctx)
+const handler = handlerFactory({
+  // 覆盖掉原型上的方法
+  // 根据当前的类型做一些值得特殊处理
+  toParseValue (value) {
+    let parseValue = parseFloat(value)
+    if (Number.isNaN(parseValue)) parseValue = ''
+    return parseValue
   }
+})
 
-  _initData (extendProps, ctx) {
-    let { field, value } = extendProps
-    let res = {}
-    const baseProps = {
-      class: {},
-      style: {},
-      attrs: {},
-      props: {},
-      domProps: {},
-      on: {},
-      nativeOn: {},
-      directives: [],
-      scopedSlots: {},
-      slot: undefined,
-      key: undefined,
-      ref: undefined
-    }
-
-    let props = {
-      value
-    }
-
-    console.log(ctx.props, extendProps)
-
-    if (extendProps.event) {
-      baseProps.on['on-change'] = (e) => ctx.props[extendProps.event](e, field)
-    }
-    const extndsProps = Object.assign(res, baseProps, { props })
-    return extndsProps
+// 渲染自己 然后 在拿到元素上需要的属性
+// 最后在获取值
+// return this -> 链式调用
+const render = renderFactory({
+  parse () {
+    return [this.cvm.inputNumber(this.inputProps).get()]
   }
+})
+
+// 是给返回出来的实例挂载一个快速构建builder方法吧猜测...
+const builder = builderFactory('inputNumber', ['props', 'event', 'validate'])
+
+const inputNumberComponent = {
+  handler,
+  render,
+  builder
 }
 
-BaseProps.instance = (extendProps, ctx) => {
-  return new BaseProps(extendProps, ctx)
-}
-
-const inputPropsFactory = (fields, ref, ctx) => {
-  const composeInputProps = BaseProps.instance(fields, ctx)
-  // let { event, value } = fields
-  // let composeInputProps = {}
-  return composeInputProps
-}
-
-const render = (ctx, fields, ref) => {
-  let { $cvm, $ctx } = ctx
-  let { label } = fields
-  let formItemProps = { label }
-  let inputProps = inputPropsFactory(fields, ref, $ctx)
-  console.log(inputProps)
-  let col = fields.col || { span: 12 } // 先设置布局
-  return $cvm.col({ props: col }, [$cvm.formItem({ props: formItemProps }, [
-    $cvm.inputNumber(inputProps.props)
-  ])])
-}
-
-const inputNumberComponent = { render }
 export default inputNumberComponent

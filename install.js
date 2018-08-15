@@ -7,5 +7,5 @@ export function install (Vue) {
   install.installed = true
 
   __Vue = Vue
-  Vue.component('CreateVueForm', $CreateForm())
+  Vue.component('CreateVueForm', $CreateForm(Vue))
 }

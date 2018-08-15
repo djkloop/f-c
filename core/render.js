@@ -4,9 +4,10 @@
  * @Author: djkloop
  * @Date: 2018-08-02 11:22:32
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-14 16:33:49
+ * @Last Modified time: 2018-08-15 12:44:49
  */
-import props from './props'
+import Creator from './Creator'
+import Props from './props'
 import { uniqueId } from '_util'
 import Logger from '_util_logger'
 const logger = Logger.getLogger('factory-render')
@@ -19,12 +20,13 @@ const renderFactory = prototypeExtend => {
 }
 
 class Render {
-  constructor (ctx, fields) {
-    console.log(ctx)
-    this.$cvm = ctx.$cvm
-    this.fields = fields
-    this.props = props.instance()
-    this.unique = uniqueId()
+  constructor (vm, handler, opts = {}) {
+    this.handler = handler
+    this.options = opts
+    this.vm = vm
+    this.cvm = Creator.instance(vm.$createElement)
+    this.event = handler.rule.event
+    this.props = Props.instance()
   }
 
   parse () {
@@ -32,10 +34,8 @@ class Render {
   }
   inputProps () {
     console.log(this.props)
-    console.log(this.fields)
+    console.log(this.options)
     console.log(1111, ' 我是对的')
-    let { col } = this.fields
-    console.log(col)
     // 嵌套一个
     return ''
   }

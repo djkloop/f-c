@@ -1,15 +1,15 @@
 /*
  * @Methods: undefined
- * @Desc: 
+ * @Desc:
  * @Author: djkloop
  * @Date: 2018-08-15 12:09:33
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 16:08:17
+ * @Last Modified time: 2018-08-15 17:28:15
  */
 import { isArray, uniqueId, isNumeric, isString, toLine } from '_util'
 
 class Handler {
-  constructor (vm, { model, field, type, label = '', opts = [], props = {}, validate = [], event = {}, value = '', slot = {}, col = { span: 12 } }) {
+  constructor (vm, { isShow = true, model, field, type, label = '', opts = [], props = {}, validate = [], event = {}, value = '', slot = {}, col = { span: 12 } }) {
     field = field.toString()
     this.type = type
     this.model = model
@@ -27,6 +27,7 @@ class Handler {
       opts,
       props,
       slot,
+      style: isShow ? {} : { display: 'none' },
       col,
       validate: isArray(validate) ? validate : [validate],
       event: Object.keys(event).reduce((initial, eventName) => {

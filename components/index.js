@@ -1,8 +1,8 @@
 import $CreateForm from './form'
-import formItem from './formitem'
 import inputNumberComponent from './inputnumber'
+import switchComponent from './switch'
 export {
   $CreateForm,
-  formItem,
-  inputNumberComponent
+  inputNumberComponent,
+  switchComponent
 }

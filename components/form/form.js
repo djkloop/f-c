@@ -57,7 +57,8 @@ const $CreateForm = vm => ({
         labelWidth: rule.col.labelWidth,
         required: rule.props.required
       }).key(unique).get()
-      return this.cvm.col({ props: rule.col }, [this.cvm.formItem(propsData, VNodeFn)])
+      console.log(rule)
+      return this.cvm.col({ props: rule.col, style: rule.style }, [this.cvm.formItem(propsData, VNodeFn)])
     },
     __parse__render (h) {
       Creator.setVm(this)

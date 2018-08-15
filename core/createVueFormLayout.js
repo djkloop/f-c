@@ -40,7 +40,6 @@ class CreateVueFormLayout {
     this.vm.$set(this.vm, 'trueData', this.trueData)
     this.vm.$set(this.vm, 'buttonProps', this.options.submitBtn)
     // 创建form
-    console.log(this, '   创建this')
     this.vm.__init__(this)
   }
 

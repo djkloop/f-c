@@ -4,12 +4,8 @@
  * @Author: djkloop
  * @Date: 2018-08-02 18:20:39
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-07 12:09:55
+ * @Last Modified time: 2018-08-15 16:15:52
  */
-
-import Logger from '_util_logger'
-const logger = Logger.getLogger('CreateFormComponent')
-
 const CreateFormComponentName = 'CreateFormComponentName'
 
 const CreateFormComponent = $$vm => {
@@ -24,7 +20,6 @@ const CreateFormComponent = $$vm => {
       }
     },
     render () {
-      logger.info('render -> ')
       return $$vm.createRender.parse($$vm.vm)
     },
     created () {

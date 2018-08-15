@@ -4,15 +4,11 @@
  * @Author: djkloop
  * @Date: 2018-08-02 11:22:32
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 15:32:20
+ * @Last Modified time: 2018-08-15 17:03:49
  */
 import Creator from './Creator'
 import Props from './props'
-import { uniqueId } from '_util'
-import Logger from '_util_logger'
-const logger = Logger.getLogger('factory-render')
 
-logger.warn('start')
 const renderFactory = prototypeExtend => {
   class $R extends Render { }
   Object.assign($R.prototype, prototypeExtend)

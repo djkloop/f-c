@@ -1,7 +1,8 @@
-import { inputNumberComponent } from '../components'
+import { inputNumberComponent, switchComponent } from '../components'
 
 const supportComponentList = {
-  inputnumber: () => inputNumberComponent
+  inputnumber: () => inputNumberComponent,
+  switch: () => switchComponent
 }
 
 const getSupportComList = function (sName) {

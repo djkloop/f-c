@@ -1,4 +1,4 @@
-import { throwIfMissing, isPlainObject, concat, assign, isArray } from '_util'
+import { throwIfMissing, isPlainObject, concat, assign, isArray } from '../util'
 const Props = function () {
   this._data = this._initData()
   this._prev = null

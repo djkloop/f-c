@@ -1,6 +1,6 @@
 import CreateFormComponent from '../../core/CreateFormComponent'
 import CreateVueFormLayout from '../../core/createVueFormLayout'
-import { uniqueId } from '_util'
+import { uniqueId } from '../../util'
 import Creator from '../../core/Creator'
 import Props from '../../core/props'
 

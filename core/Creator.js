@@ -1,4 +1,4 @@
-import { isFunction, isString } from '_util'
+import { isFunction, isString } from '../util'
 
 let _instance = null
 

@@ -4,9 +4,9 @@
  * @Author: djkloop
  * @Date: 2018-08-15 12:09:33
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 17:28:15
+ * @Last Modified time: 2018-08-15 17:52:28
  */
-import { isArray, uniqueId, isNumeric, isString, toLine } from '_util'
+import { isArray, uniqueId, isNumeric, isString, toLine } from '../util'
 
 class Handler {
   constructor (vm, { isShow = true, model, field, type, label = '', opts = [], props = {}, validate = [], event = {}, value = '', slot = {}, col = { span: 12 } }) {

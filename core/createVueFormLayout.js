@@ -1,7 +1,7 @@
 import merge from 'lodash.merge'
 import { getConfig, createItem } from './common'
 import { Builder } from './builder'
-import { assert } from '_warn'
+import { assert } from '../util/warn'
 
 class CreateVueFormLayout {
   constructor (vm, fields) {

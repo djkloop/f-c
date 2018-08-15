@@ -4,9 +4,9 @@
  * @Author: djkloop
  * @Date: 2018-08-02 14:27:29
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 11:41:33
+ * @Last Modified time: 2018-08-15 17:52:00
  */
-import { isArray } from '_util'
+import { isArray } from '../util'
 const baseRule = () => {
   return {
     props: {},

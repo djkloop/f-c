@@ -4,9 +4,9 @@
  * @Author: djkloop
  * @Date: 2018-08-15 12:09:33
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 15:34:37
+ * @Last Modified time: 2018-08-15 16:08:17
  */
-import { isArray, uniqueId, isNumeric } from '_util'
+import { isArray, uniqueId, isNumeric, isString, toLine } from '_util'
 
 class Handler {
   constructor (vm, { model, field, type, label = '', opts = [], props = {}, validate = [], event = {}, value = '', slot = {}, col = { span: 12 } }) {
@@ -30,10 +30,12 @@ class Handler {
       col,
       validate: isArray(validate) ? validate : [validate],
       event: Object.keys(event).reduce((initial, eventName) => {
-        initial[`on-${eventName}`] = event[eventName]
+        initial[`on-${eventName}`] = isString(event[eventName]) ? (e) => this.vm.$emit(toLine(event[eventName]), e) : event[eventName]
         return initial
       }, {})
     }
+
+    console.log(this.rule)
 
     this.field = field
     this.vm = vm

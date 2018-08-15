@@ -34,7 +34,7 @@ const $CreateForm = vm => ({
       this.fromRefName = `create-vue-form-${this.unique}`
       this.renderSort = fieldList
       this.renders = this.renderSort.reduce((initial, field) => {
-        initial[field] = handlers[field]
+        initial[field] = handlers[field].render
         return initial
       }, {})
       this.form = {
@@ -68,9 +68,16 @@ const $CreateForm = vm => ({
       // 3. 设置class
       // 4. 设置key
       // 5. 最后获取object
+      let childVnode = this.renderSort.map(field => {
+        let render = this.renders[field], { key, type } = render.handler
+        if (type !== 'hidden') {
+          return this.makeFormItem(render.handler, render.parse(), `fItem${key}${unique}`)
+        }
+        // let { type } = render.handlers
+        console.log(render.handlers, render)
+      })
       let propsData = this.props.props(Object.assign({}, this.options.form, this.form)).ref(this.fromRefName).class(`crate-vue-form-${unique}`, true).key(unique).get()
-      console.log(propsData)
-      return this.finish ? this.cvm.form(propsData, 'good') : h('span', '组件没有加载完成')
+      return this.finish ? this.cvm.form(propsData, [this.cvm.row({ props: this.options.row || {} }, childVnode)]) : h('span', '组件没有加载完成')
     }
   },
   render (h) {

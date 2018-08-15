@@ -4,7 +4,7 @@
  * @Author: djkloop
  * @Date: 2018-08-02 11:19:36
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 14:41:13
+ * @Last Modified time: 2018-08-15 15:24:44
  */
 import handlerFactory from '../../core/handler'
 import renderFactory from '../../core/render'
@@ -25,7 +25,7 @@ const handler = handlerFactory({
 // return this -> 链式调用
 const render = renderFactory({
   parse () {
-    return [this.cvm.inputNumber(this.inputProps).get()]
+    return [this.cvm.inputNumber(this.inputProps().get())]
   }
 })
 

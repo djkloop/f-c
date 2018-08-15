@@ -13,7 +13,7 @@ export const createItem = (vm, fieldsObj, opts) => {
   let component = getSupportComList(fieldsObj.type)
   let $component = component()
   let $H = new $component.handler(vm, fieldsObj)
-  $H.handler = new $component.render(vm, $H, opts)
+  $H.render = new $component.render(vm, $H, opts)
   return $H
 }
 

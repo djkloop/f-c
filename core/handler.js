@@ -4,7 +4,7 @@
  * @Author: djkloop
  * @Date: 2018-08-15 12:09:33
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 14:45:52
+ * @Last Modified time: 2018-08-15 15:34:37
  */
 import { isArray, uniqueId, isNumeric } from '_util'
 
@@ -23,7 +23,7 @@ class Handler {
     }
 
     this.rule = {
-      label,
+      title: label,
       opts,
       props,
       slot,

@@ -4,7 +4,7 @@
  * @Author: djkloop
  * @Date: 2018-08-02 11:22:32
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 12:44:49
+ * @Last Modified time: 2018-08-15 15:32:20
  */
 import Creator from './Creator'
 import Props from './props'
@@ -33,11 +33,14 @@ class Render {
     throw new Error('请实现parse方法')
   }
   inputProps () {
-    console.log(this.props)
-    console.log(this.options)
-    console.log(1111, ' 我是对的')
+    // 从上层的handler过来的
+    let { itemRefName, unique, field, rule: { props } } = this.handler
     // 嵌套一个
-    return ''
+    return this.props.props(Object.assign(props, { model: `formData.${field}`, value: this.vm.formData[field], eleId: itemRefName }))
+      .ref(itemRefName).key(`f-item-${unique}`).on(this.event).on('input', v => {
+        this.vm.$emit('input', v)
+        this.vm.$set(this.vm.formData, field, v)
+      })
   }
 }
 

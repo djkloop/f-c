@@ -64,7 +64,6 @@ const nodes = {
 // 在原型链上构建
 Object.keys(nodes).forEach((k) => {
   Creator.prototype[k] = function (data, VNodeFn) {
-    console.log(data, VNodeFn, this)
     return this.make(nodes[k], data, VNodeFn)
   }
 })

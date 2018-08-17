@@ -4,7 +4,7 @@
  * @Author: djkloop
  * @Date: 2018-08-15 12:09:33
  * @Last Modified by: djkloop
- * @Last Modified time: 2018-08-15 17:52:28
+ * @Last Modified time: 2018-08-16 17:48:09
  */
 import { isArray, uniqueId, isNumeric, isString, toLine } from '../util'
 
@@ -31,12 +31,10 @@ class Handler {
       col,
       validate: isArray(validate) ? validate : [validate],
       event: Object.keys(event).reduce((initial, eventName) => {
-        initial[`on-${eventName}`] = isString(event[eventName]) ? (e) => this.vm.$emit(toLine(event[eventName]), e) : event[eventName]
+        initial[`on-${eventName}`] = isString(event[eventName]) ? v => { let res = []; res.push(field); res.unshift(v); this.vm.$emit(toLine(event[eventName]), ...res) } : event[eventName]
         return initial
       }, {})
     }
-
-    console.log(this.rule)
 
     this.field = field
     this.vm = vm
@@ -45,12 +43,37 @@ class Handler {
     this.el = {}
   }
 
+  getValue () {
+    return this.vm._getTrueDataValue(this.field)
+  }
+
   toParseValue (v) {
     return v.toString()
   }
 
   toTrueValue (pV) {
     return pV
+  }
+
+  setValue (value) {
+    this.vm._changeTrueData(this.field, value)
+  }
+
+  setParseValue (parseValue) {
+    this.setValue(this.toTrueValue(parseValue))
+  }
+
+  watchTrueValue (n) {
+    this.vm._changeFormData(this.field, this.toParseValue(n.value))
+  }
+
+  mounted () {
+
+  }
+
+  _mounted () {
+    this.el = this.vm.$refs[this.itemRefName]
+    this.mounted()
   }
 }
 

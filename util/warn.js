@@ -1,13 +1,13 @@
 
 export function assert (condition, message) {
   if (!condition) {
-    throw new Error(`[f-create] ${message}`)
+    throw new Error(`[create-vue-form] ${message}`)
   }
 }
 
 export function warn (condition, message) {
   if (process.env.NODE_ENV !== 'production' && !condition) {
-    typeof console !== 'undefined' && console.warn(`[f-create] ${message}`)
+    typeof console !== 'undefined' && console.warn(`[create-vue-form] ${message}`)
   }
 }
 

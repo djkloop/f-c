@@ -1,5 +1,5 @@
 import merge from 'lodash.merge'
-import { getConfig, createItem } from './common'
+import { getConfig, createItem, getGlobalApi } from './common'
 import { Builder } from './builder'
 import { assert } from '../util/warn'
 
@@ -16,7 +16,6 @@ class CreateVueFormLayout {
     this.formData = {}
     this.validate = {}
     this.trueData = {}
-    this.fieldList = []
   }
 
   init () {
@@ -36,11 +35,48 @@ class CreateVueFormLayout {
         assert(false, '字段重复...')
       }
     })
+    // TODO: 拿到全局api
+    this.$CreateGlobalApi = getGlobalApi(this)
     this.vm.$set(this.vm, 'formData', this.formData)
     this.vm.$set(this.vm, 'trueData', this.trueData)
     this.vm.$set(this.vm, 'buttonProps', this.options.submitBtn)
     // 创建form
-    this.vm.__init__(this)
+    this.createRender = this.vm.__init__(this, this)
+  }
+
+  /**
+   * 返回所有字段
+   *
+   * @returns Array
+   * @memberof CreateVueFormLayout
+   */
+  toFields () {
+    return Object.keys(this.formData)
+  }
+
+  /**
+   * 删除指定字段
+   *
+   * @param {*} field
+   * @memberof CreateVueFormLayout
+   */
+  removeField (field) {
+    if (this.handlers[field] === undefined) { throw new Error(`${field}字段不存在`) }
+
+    this.vm._removeFormData(field)
+    delete this.handlers[field]
+    for (let index = 0; index < this.fields.length; index++) {
+      const element = this.fields[index]
+      if (element.field === field) {
+        this.fields.splice(index, 1)
+        delete this.options[index]
+      }
+    }
+    delete this.validate[field]
+    delete this.formData[field]
+    delete this.trueData[field]
+    this.createRender._removeRender(field)
+    console.log(this, this.vm)
   }
 
   setHandler ($H) {
@@ -59,6 +95,33 @@ class CreateVueFormLayout {
     // console.log(this.handlers, 'handlers')
     // console.log(this.validate, 'validate')
     // console.log(this.trueData, 'trueData')
+  }
+
+  addHandlerWatch (handler) {
+    let field = handler.field
+    let unWatch = this.vm.$watch(`formData.${field}`, (n, o) => {
+      if (this.formData[field]) {
+        if (handler !== undefined) {
+          handler.setParseValue(n)
+        } else {
+          unWatch()
+        }
+      }
+    }, { deep: true })
+    let unWatch2 = this.vm.$watch(`trueData.${field}`, (n, o) => {
+      if (this.formData[field]) {
+        if (handler !== undefined) {
+          let json = JSON.stringify(n)
+          if (this.vm.jsonData[field] !== json) {
+            this.vm.jsonData[field] = json
+            handler.model && handler.model(this.vm._getTrueData(field))
+            handler.watchTrueValue(n)
+          }
+        } else {
+          unWatch2()
+        }
+      }
+    }, { deep: true })
   }
 
   checkRule (field) {

@@ -1,4 +1,3 @@
-import CreateFormComponent from '../../core/CreateFormComponent'
 import CreateVueFormLayout from '../../core/createVueFormLayout'
 import { uniqueId } from '../../util'
 import Creator from '../../core/Creator'
@@ -24,10 +23,28 @@ const $CreateForm = vm => ({
     $Create.init()
   },
   methods: {
-    component () {
-      return CreateFormComponent(this)
+    _getTrueDataValue (field) {
+      return this.trueData[field].value
     },
-    __init__ ({fieldList, handlers, validate, options}) {
+    _changeTrueData (field, value) {
+      this.$set(this.trueData[field], 'value', value)
+    },
+    _getTrueData (field) {
+      return this.trueData[field]
+    },
+    _changeFormData (field, value) {
+      this.$set(this.formData, field, value)
+    },
+    _removeRender (field) {
+      delete this.renders[field]
+      this.renderSort.splice(this.renderSort.indexOf(field), 1)
+      console.log(this)
+    },
+    _removeFormData (field) {
+      this.$delete(this.formData, field)
+      this.$delete(this.trueData, field)
+    },
+    __init__ (cVm, { fieldList, handlers, validate, options, $CreateGlobalApi }) {
       this.finish = true
       this.unique = uniqueId()
       this.options = options
@@ -41,11 +58,18 @@ const $CreateForm = vm => ({
         model: this.formData,
         rules: validate
       }
-
+      this.$CreateGlobalApi = $CreateGlobalApi
       this.cvm = Creator.instance(this.$createElement)
       this.props = Props.instance()
-
-      console.log(this.cvm, this.props)
+      // 数据监听 -> v-model
+      Object.keys(this.formData).map((field) => {
+        let handler = cVm.handlers[field]
+        handler.model && handler.model(this._getTrueData(field))
+        cVm.addHandlerWatch(handler)
+        handler._mounted()
+      })
+      cVm.options.mounted && cVm.options.mounted()
+      return this
     },
     makeFormItem ({ rule, fRefName, unique, field }, VNodeFn) {
       let propsData = this.props.props({
@@ -57,7 +81,6 @@ const $CreateForm = vm => ({
         labelWidth: rule.col.labelWidth,
         required: rule.props.required
       }).key(unique).get()
-      console.log(rule)
       return this.cvm.col({ props: rule.col, style: rule.style }, [this.cvm.formItem(propsData, VNodeFn)])
     },
     __parse__render (h) {
@@ -69,13 +92,12 @@ const $CreateForm = vm => ({
       // 3. 设置class
       // 4. 设置key
       // 5. 最后获取object
+      console.log(this.renderSort, ' render')
       let childVnode = this.renderSort.map(field => {
         let render = this.renders[field], { key, type } = render.handler
         if (type !== 'hidden') {
           return this.makeFormItem(render.handler, render.parse(), `fItem${key}${unique}`)
         }
-        // let { type } = render.handlers
-        console.log(render.handlers, render)
       })
       let propsData = this.props.props(Object.assign({}, this.options.form, this.form)).ref(this.fromRefName).class(`crate-vue-form-${unique}`, true).key(unique).get()
       return this.finish ? this.cvm.form(propsData, [this.cvm.row({ props: this.options.row || {} }, childVnode)]) : h('span', '组件没有加载完成')
@@ -83,26 +105,6 @@ const $CreateForm = vm => ({
   },
   render (h) {
     return this.__parse__render(h)
-    // // 拿到构造器
-    // let cvm = ComposeItem.instance(h, ctx)
-    // ctx.cvm = cvm
-    // ctx.cvm._init(ctx.cvm, ctx.props.formName)
-    // // render child vNode
-    // function itemsRender () {
-    //   let items = ctx.cvm.getComposeItem()
-    //   return items
-    // }
-
-    // // back child vNode
-    // let items = itemsRender()
-
-    // return ctx.cvm.form({
-    //   class: ctx.data.staticStyle,
-    //   style: ctx.data.staticStyle,
-    //   props: ctx.props
-    // },
-    // [ctx.cvm.row({props: {type: 'flex'}}, [items])]
-    // )
   }
 })
 

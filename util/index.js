@@ -12,7 +12,7 @@ const isDate = (arg) => toString.call(arg) === '[object Date]'
 
 // 中划线转换驼峰
 const toHump = name => {
-  return name.replace(/\-(\w)/g, function (all, letter) {
+  return name.replace(/\\-(\w)/g, function (all, letter) {
     return letter.toUpperCase()
   })
 }
@@ -81,6 +81,8 @@ const dateFormat = (fmt, date = new Date()) => {
   }
 }
 
+const inBrowser = typeof window !== 'undefined'
+
 export {
   concat,
   assign,
@@ -97,5 +99,6 @@ export {
   dateFormat,
   isNumeric,
   toHump,
-  toLine
+  toLine,
+  inBrowser
 }

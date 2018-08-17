@@ -1,4 +1,5 @@
 import { inputNumberComponent, switchComponent } from '../components'
+import { assert, warn } from '../util/warn'
 
 const supportComponentList = {
   inputnumber: () => inputNumberComponent,
@@ -54,3 +55,62 @@ export const getConfig = _ => ({
   },
   mounted: () => { }
 })
+
+export const getGlobalApi = createVueFormLayoutVm => {
+  let vm = createVueFormLayoutVm.vm
+  console.log(createVueFormLayoutVm)
+  return {
+    /**
+     * 返回当前form的实例
+     *
+     * @returns
+     */
+    formData () {
+      let data = {}
+      createVueFormLayoutVm.toFields().map(field => {
+        field = field.toString()
+        data[field] = createVueFormLayoutVm.handlers[field].getValue()
+      })
+      return data
+    },
+    /**
+     *返回当前 form 表单中的某个字段的 value
+     *
+     * @param {*} field
+     * @returns
+     */
+    getValue (field) {
+      // 获取值
+      field = field.toString()
+      let handler = createVueFormLayoutVm.handlers[field]
+      if (handler === void 0) {
+        warn(false, `${field} 字段不存在`)
+      } else {
+        return handler.getValue()
+      }
+    },
+    /**
+     * 修改指定字段的某个值
+     *
+     * @param {string} field
+     * @param {any} value
+     */
+    changeFieldValue (field, value) {
+      field = field.toString()
+      let handler = createVueFormLayoutVm.handlers[field]
+      if (handler === void 0) {
+        assert(false, `${field} 字段不存在`)
+      } else {
+        handler.setValue(value)
+      }
+    },
+    /**
+     * 删除指定字段
+     *
+     * @param {*} field
+     */
+    removeField (field) {
+      createVueFormLayoutVm.removeField(field.toString())
+    }
+  }
+}
